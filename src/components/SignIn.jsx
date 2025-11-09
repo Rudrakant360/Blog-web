@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const SignIn = () => {
   const name = useRef()
   const email = useRef()
   const password = useRef()
   const [show, setShow] = useState(false)
+  const navigate = useNavigate()
 
   const localEmail = localStorage.getItem('email')
   const localPassword = localStorage.getItem('password')
@@ -34,10 +36,12 @@ const SignIn = () => {
     ) {
       localStorage.setItem('signup', email.current.value)
       alert(`Welcome back, ${localName}!`)
+      navigate('/')
       window.location.reload()
     } else {
       alert('Invalid email or password')
     }
+    
   }
 
   return (
