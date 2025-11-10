@@ -75,7 +75,7 @@ const SignIn = () => {
             </button>
 
             <p className="text-center text-sm text-gray-600 mt-4">
-              Don’t have an account?{' '}
+              Don't have an account?{' '}
               <span
                 onClick={() => setShow(false)}
                 className="text-black font-medium hover:underline cursor-pointer"

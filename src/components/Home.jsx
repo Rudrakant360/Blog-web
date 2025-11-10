@@ -13,11 +13,25 @@ const Home = () => {
   }
 
   const [posts, setPosts] = useState([])
+  const [isSignedIn, setIsSignedIn] = useState(false)
+  const [userName, setUserName] = useState('')
   const navigate = useNavigate()
 
   useEffect(() => {
     const savedPosts = JSON.parse(localStorage.getItem('posts')) || []
     setPosts(savedPosts)
+
+    const signedInEmail = localStorage.getItem('signup')
+    const storedEmail = localStorage.getItem('email')
+    const storedName = localStorage.getItem('name')
+
+   
+    if (signedInEmail && signedInEmail === storedEmail) {
+      setIsSignedIn(true)
+      setUserName(storedName || 'User')
+    } else {
+      setIsSignedIn(false)
+    }
   }, [])
 
   const handleDelete = (id) => {
@@ -28,21 +42,19 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-white text-black py-8 px-4 sm:px-6 lg:px-10">
- 
       <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-10 bg-white shadow-md rounded-2xl px-6 py-4 border border-gray-200 space-y-4 sm:space-y-0">
         <div className="text-center sm:text-left">
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
             Blog Dashboard
           </h1>
-          <p className="text-gray-600 text-sm sm:text-base mt-1">
-            Welcome back,{' '}
-            <span className="font-semibold text-black">
-              {localStorage.getItem('name') || 'User'}
-            </span>
-          </p>
+          {isSignedIn && (
+            <p className="text-gray-600 text-sm sm:text-base mt-1">
+              Welcome back,{' '}
+              <span className="font-semibold text-black">{userName}</span>
+            </p>
+          )}
         </div>
 
-    
         <div className="flex flex-wrap justify-center sm:justify-end gap-3">
           <Link
             to="/createpost"
@@ -50,22 +62,26 @@ const Home = () => {
           >
             + New Post
           </Link>
-          <button
-            onClick={logout}
-            className="bg-gray-200 hover:bg-gray-300 text-black font-semibold px-4 sm:px-5 py-2 rounded-lg shadow-md transition-all text-sm sm:text-base"
-          >
-            Logout
-          </button>
-          <button
-            onClick={deleteAcc}
-            className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 sm:px-5 py-2 rounded-lg shadow-md transition-all text-sm sm:text-base"
-          >
-            Delete Account
-          </button>
+
+          {isSignedIn && (
+            <>
+              <button
+                onClick={logout}
+                className="bg-gray-200 hover:bg-gray-300 text-black font-semibold px-4 sm:px-5 py-2 rounded-lg shadow-md transition-all text-sm sm:text-base"
+              >
+                Logout
+              </button>
+              <button
+                onClick={deleteAcc}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 sm:px-5 py-2 rounded-lg shadow-md transition-all text-sm sm:text-base"
+              >
+                Delete Account
+              </button>
+            </>
+          )}
         </div>
       </header>
 
-      
       <main className="max-w-5xl mx-auto">
         {posts.length === 0 ? (
           <div className="text-center mt-16 sm:mt-24 px-4">
@@ -88,8 +104,8 @@ const Home = () => {
                     {post.title}
                   </h2>
                   <p className="text-gray-800 leading-relaxed text-sm sm:text-base line-clamp-3">
-                    {post.desc.length > 100
-                      ? post.desc.slice(0, 100) + '...'
+                    {post.desc.length > 20
+                      ? post.desc.slice(0, 20) + '...'
                       : post.desc}
                   </p>
 
